@@ -1,0 +1,37 @@
+version: "3"
+
+services:
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    restart: always
+    volumes:
+      - .:/app
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:10.17
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=1234
+      - POSTGRES_USER=lumiere
+      - POSTGRES_DB=lumierethebrabo
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+
+  pg-admin:
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@email.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
+      - PGADMIN_LISTEN_PORT=5050
+    ports:
+      - "5050:5050"
+    depends_on:
+      - postgres
+
+volumes:
+  pg-data:
